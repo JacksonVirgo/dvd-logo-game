@@ -4,6 +4,8 @@ use bevy::{
     window::{PrimaryWindow, WindowMode},
 };
 
+use dvd_logo_game::entities::player::player;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
@@ -19,6 +21,7 @@ fn main() {
         .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
         .add_systems(Startup, spawn_camera)
         .add_systems(Update, exit_game)
+        .add_plugins(player::PlayerPlugin)
         .run();
 }
 
