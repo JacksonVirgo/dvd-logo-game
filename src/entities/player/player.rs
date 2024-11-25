@@ -1,8 +1,6 @@
 use bevy::{
     prelude::*,
-    render::view::window,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
-    transform,
     window::PrimaryWindow,
 };
 
