@@ -1,15 +1,9 @@
-use std::f32::consts::PI;
-
+use super::movement;
 use bevy::{
     prelude::*,
-    render::view::window,
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
     window::PrimaryWindow,
 };
-
-use crate::utils::vector::vec3_direction;
-
-use super::movement;
 use rand::random;
 
 pub const PLAYER_RADIUS: f32 = 16.0;
@@ -97,10 +91,10 @@ pub fn spawn_player(
 }
 
 fn aim_reticle(
-    mut player_query: Query<(&Transform, &Player)>,
+    player_query: Query<(&Transform, &Player)>,
     mut retical_query: Query<(&mut Transform, &mut AimingRetical), Without<Player>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
-    camera_query: Query<(&Camera, &GlobalTransform)>, // Assuming you have a `PrimaryCamera` marker
+    camera_query: Query<(&Camera, &GlobalTransform)>,
 ) {
     let window = window_query.single();
     let cursor_position = window.cursor_position();
@@ -109,8 +103,8 @@ fn aim_reticle(
         let (camera, camera_transform) = camera_query.single();
         if let Some(world_position) = camera.viewport_to_world(camera_transform, cursor_position) {
             let cursor = world_position.get_point(0.0);
-            for (parent_transform, player) in player_query.iter() {
-                for (mut ret_transform, retical) in retical_query.iter_mut() {
+            for (parent_transform, _) in player_query.iter() {
+                for (mut ret_transform, _) in retical_query.iter_mut() {
                     let origin = Vec2::new(
                         parent_transform.translation.x,
                         parent_transform.translation.y,
@@ -120,13 +114,6 @@ fn aim_reticle(
 
                     ret_transform.translation =
                         Vec3::new(direction.x * 32.0, direction.y * 32.0, 0.0);
-
-                    println!(
-                        "Direction: ({}, {}) - {}",
-                        direction.x,
-                        direction.y,
-                        direction.length()
-                    );
                 }
             }
         }
