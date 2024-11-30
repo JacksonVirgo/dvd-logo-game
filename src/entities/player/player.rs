@@ -1,3 +1,5 @@
+use crate::utils::vector::vec2_direction;
+
 use super::movement;
 use bevy::{
     prelude::*,
@@ -105,15 +107,13 @@ fn aim_reticle(
             let cursor = world_position.get_point(0.0);
             for (parent_transform, _) in player_query.iter() {
                 for (mut ret_transform, _) in retical_query.iter_mut() {
-                    let origin = Vec2::new(
-                        parent_transform.translation.x,
-                        parent_transform.translation.y,
+                    let direction =
+                        vec2_direction(parent_transform.translation.truncate(), cursor.truncate());
+                    ret_transform.translation = Vec3::new(
+                        direction.x * 32.0,
+                        direction.y * 32.0,
+                        ret_transform.translation.z,
                     );
-                    let cursor_target = Vec2::new(cursor.x, cursor.y);
-                    let direction = (cursor_target - origin).normalize();
-
-                    ret_transform.translation =
-                        Vec3::new(direction.x * 32.0, direction.y * 32.0, 0.0);
                 }
             }
         }
